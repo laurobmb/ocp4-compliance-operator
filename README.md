@@ -1,14 +1,14 @@
 # OpenShift Compliance Operator - GitOps Deployment
 
-![ArgoCD](photos/argocd.png)
-
-![OCP4](photos/ocp.png)
-
 ## 📜 Visão Geral
 
 Este repositório contém os manifests necessários para a implantação do **Compliance Operator** no OpenShift utilizando o **OpenShift GitOps (ArgoCD)**.
 
 O **Compliance Operator** é uma ferramenta nativa do OpenShift que permite avaliar e validar se o cluster está em conformidade com políticas de segurança baseadas em benchmarks, como o **CIS (Center for Internet Security)**. Ele automatiza o processo de verificação de configurações de segurança, geração de relatórios e ajuda na mitigação de não conformidades.
+
+![ArgoCD](photos/argocd.png)
+
+![OCP4](photos/ocp.png)
 
 ### 🚀 Por que utilizar o Compliance Operator?
 
