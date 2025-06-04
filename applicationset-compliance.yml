@@ -1,0 +1,28 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: compliance
+  namespace: openshift-gitops
+spec:
+  generators:
+  - list:
+      elements:
+      - cluster: malima
+        url: https://api.malima.rhbr-lab.com:6443
+  template:
+    metadata:
+      name: '{{cluster}}-compliance'
+    spec:
+      project: default
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+      source:
+        repoURL: https://github.com/marcosraposo/demo-gitops
+        targetRevision: main
+        path: applicationsets/openshift-compliance
+      destination:
+        namespace: openshift-compliance
+        server: '{{url}}'

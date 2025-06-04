@@ -1,0 +1,21 @@
+---
+apiVersion: cluster.open-cluster-management.io/v1beta1
+kind: Placement
+metadata:
+  labels:
+    open-cluster-management.io/policy-set: acs-policyset-compliance-managed
+  name: acs-placement-compliance-managed
+  namespace: rhacm-policies
+spec:
+  clusterSets:
+    - default
+    - dev
+  predicates:
+    - requiredClusterSelector:
+        labelSelector:
+          matchExpressions:
+            - key: name
+              operator: In
+              values:
+                - "ocpdev"
+                

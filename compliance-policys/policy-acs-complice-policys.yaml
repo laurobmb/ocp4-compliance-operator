@@ -1,0 +1,151 @@
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: Policy
+metadata:
+  annotations:
+    policy.open-cluster-management.io/categories: CM Configuration Management
+    policy.open-cluster-management.io/controls: CM-2 Baseline Configuration
+    policy.open-cluster-management.io/description: ""
+    policy.open-cluster-management.io/standards: NIST SP 800-53
+  name: acs-complicance-operator-policys
+  namespace: rhacm-policies
+spec:
+  remediationAction: enforce  
+  disabled: false
+  policy-templates:
+#  - objectDefinition:
+#      apiVersion: policy.open-cluster-management.io/v1
+#      kind: ConfigurationPolicy
+#      metadata:
+#        name: operator-compliance-tailoredprofile-cis-infra-tp
+#      spec:
+#        remediationAction: enforce
+#        severity: low
+#        object-templates:
+#        - complianceType: musthave
+#          objectDefinition:
+#            kind: TailoredProfile
+#            metadata:
+#              name: cis-infra-tp
+#              namespace: openshift-compliance                
+#            spec:
+#              extends: ocp4-cis
+#              title: modified profile to scan infra nodes
+#              setValues:
+#              - name: ocp4-var-role-master
+#                value: infra
+#                rationale: scan infra nodes
+#              - name: ocp4-var-role-worker
+#                value: infra
+#                rationale:  infra nodes
+#              description: infra-scan
+
+#  - objectDefinition:
+#      apiVersion: policy.open-cluster-management.io/v1
+#      kind: ConfigurationPolicy
+#      metadata:
+#        name: operator-compliance-tailoredprofile-cis-node-tp
+#      spec:
+#        remediationAction: enforce
+#        severity: low
+#        object-templates:
+#        - complianceType: musthave
+#          objectDefinition:
+#            apiVersion: compliance.openshift.io/v1alpha1
+#            kind: TailoredProfile
+#            metadata:
+#              name: cis-node-infra-tp
+#              namespace: openshift-compliance                
+#            spec:
+#              extends: ocp4-cis-node
+#              title: modified profile to scan infra nodes
+#              setValues:
+#              - name: ocp4-var-role-master
+#                value: infra
+#                rationale: scan infra nodes
+#              - name: ocp4-var-role-worker
+#                value: infra
+#                rationale:  infra nodes
+#              description: infra-scan cis-node
+
+
+  - objectDefinition:
+      apiVersion: policy.open-cluster-management.io/v1
+      kind: ConfigurationPolicy
+      metadata:
+        name: operator-compliance-scansettingbinding
+      spec:
+        remediationAction: enforce
+        severity: low
+        object-templates:
+        - complianceType: musthave
+          objectDefinition:
+            apiVersion: compliance.openshift.io/v1alpha1
+            kind: ScanSettingBinding
+            metadata:
+              name: cis-compliance
+              namespace: openshift-compliance
+            profiles:
+              - name: ocp4-cis-node
+                kind: Profile
+                apiGroup: compliance.openshift.io/v1alpha1
+              - name: ocp4-cis
+                kind: Profile
+                apiGroup: compliance.openshift.io/v1alpha1
+            settingsRef:
+              name: cis-auto-apply
+              kind: ScanSetting
+              apiGroup: compliance.openshift.io/v1alpha1
+
+
+  - objectDefinition:
+      apiVersion: policy.open-cluster-management.io/v1
+      kind: ConfigurationPolicy
+      metadata:
+        name: operator-compliance-scansetting
+      spec:
+        remediationAction: enforce
+        severity: low
+        object-templates:
+        - complianceType: musthave
+          objectDefinition:
+            apiVersion: compliance.openshift.io/v1alpha1
+            kind: ScanSetting
+            metadata:
+              name: cis-auto-apply
+              namespace: openshift-compliance
+            timeout: 30m
+            autoUpdateRemediations: true
+            strictNodeScan: true
+            autoApplyRemediations: true
+            showNotApplicable: false
+            schedule: 00 10 * * *
+            maxRetryOnTimeout: 3
+            roles:
+              - master
+              - worker
+              - infra
+            scanTolerations:
+              - operator: Exists
+            rawResultStorage:
+              nodeSelector:
+                node-role.kubernetes.io/master: ''
+              pvAccessModes:
+                - ReadWriteOnce
+              rotation: 3
+              size: 2Gi
+              tolerations:
+                - effect: NoSchedule
+                  key: node-role.kubernetes.io/master
+                  operator: Exists
+                - effect: NoExecute
+                  key: node.kubernetes.io/not-ready
+                  operator: Exists
+                  tolerationSeconds: 300
+                - effect: NoExecute
+                  key: node.kubernetes.io/unreachable
+                  operator: Exists
+                  tolerationSeconds: 300
+                - effect: NoSchedule
+                  key: node.kubernetes.io/memory-pressure
+                  operator: Exists

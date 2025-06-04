@@ -1,0 +1,16 @@
+apiVersion: compliance.openshift.io/v1alpha1
+kind: TailoredProfile
+metadata:
+  name: new-profile
+  annotations:
+    compliance.openshift.io/product-type: Node 
+spec:
+  extends: ocp4-cis-node 
+  description: My custom profile 
+  title: Custom profile 
+  enableRules:
+    - name: ocp4-etcd-unique-ca
+      rationale: We really need to enable this
+  disableRules:
+    - name: ocp4-file-groupowner-cni-conf
+      rationale: This does not apply to the cluster
