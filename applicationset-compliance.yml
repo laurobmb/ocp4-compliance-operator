@@ -22,11 +22,11 @@ spec:
         syncOptions:
           - CreateNamespace=true
           - SkipDryRunOnMissingResource=true
-          - Delete=confirm
+#          - Delete=confirm
           - ApplyOutOfSyncOnly=true
           - PruneLast=true
           - Replace=true
-          - ContinueOnError=true
+#          - ContinueOnError=true
       source:
         repoURL: https://github.com/laurobmb/ocp4-compliance-operator
         targetRevision: main
