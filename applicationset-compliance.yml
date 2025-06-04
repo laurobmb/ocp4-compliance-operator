@@ -19,10 +19,17 @@ spec:
         automated:
           prune: true
           selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - SkipDryRunOnMissingResource=true
+          - Delete=confirm
+          - ApplyOutOfSyncOnly=true
+          - PruneLast=true
+          - Replace=true
       source:
-        repoURL: https://github.com/marcosraposo/demo-gitops
+        repoURL: https://github.com/laurobmb/ocp4-compliance-operator
         targetRevision: main
-        path: applicationsets/openshift-compliance
+        path: compliance-policys/compliance_yamls
       destination:
         namespace: openshift-compliance
         server: '{{url}}'
