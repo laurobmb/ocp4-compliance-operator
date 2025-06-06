@@ -10,7 +10,7 @@ spec:
     targetRevision: HEAD
     path: compliance-policys/compliance_yamls/configurations
   destination:
-    server: 'https://api.malima.rhbr-lab.com:6443'
+    name: in-cluster
     namespace: openshift-gitops
   syncPolicy:
     automated:
