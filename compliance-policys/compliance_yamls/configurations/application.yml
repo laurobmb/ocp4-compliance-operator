@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: 'https://github.com/laurobmb/ocp4-compliance-operator'
     targetRevision: HEAD
-    path: compliance-policys/compliance_yamls/configuration
+    path: compliance-policys/compliance_yamls/configurations
   destination:
     server: 'https://api.malima.rhbr-lab.com:6443'
     namespace: openshift-gitops
