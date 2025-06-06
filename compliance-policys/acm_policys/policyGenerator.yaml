@@ -1,0 +1,72 @@
+apiVersion: policy.open-cluster-management.io/v1
+kind: PolicyGenerator
+metadata:
+  name: policy-config-cluster
+placementBindingDefaults:
+  name: binding-policy-openshift-dr-hub
+policyDefaults:
+  categories:
+    - CM Configuration Management
+  controls: 
+    - CM-2 Baseline Configuration
+  namespace: rhacm-policies
+  policySets:
+    - openshift-hub
+    - openshift-clusters
+    - openshift-prd
+  remediationAction: inform
+  severity: medium
+  standards:
+    - NIST SP 800-53
+
+policies:
+  - name: install_loki
+    categories:
+      - SI System and Information Integrity
+    controls:
+      - SI-7 Software Firmware and Information Integrity
+    manifests:
+      - path: playbooks/clusterlogforwarder-instance.yml
+      - path: playbooks/clusterrolebinding-collect-application-logs-binding.yml
+      - path: playbooks/clusterrolebinding-collect-infrastructure-logs-binding.yml
+      - path: playbooks/clusterrolebinding-logging-collector-logs-writer-binding.yml
+      - path: playbooks/lokistak.yml
+      - path: playbooks/namespace-openshift-logging.yml
+      - path: playbooks/namespace-openshift-operators-redhat.yml
+      - path: playbooks/operatorgroup-cluster-logging.yml
+      - path: playbooks/operatorgroup-loki-operator.yml
+      - path: playbooks/logging-collector-sa.yml
+      - path: playbooks/secret-logging-loki-s3.yml
+      - path: playbooks/subscription-cluster-logging.yml
+      - path: playbooks/subscription-loki-operator.yml
+      - path: playbooks/uiplugin-logging.yml
+      - path: playbooks/configmap-noobaa-s3-serving-cert.yml
+      - path: playbooks/objectbucketclaim-loki-bucket-odf.yml
+    policySets:
+      - openshift-prd
+    remediationAction: enforce
+
+  - name: loki-operator-status
+    remediationAction: InformOnly
+    dependencies:
+      - name: "loki-configure"
+        compliance: "Compliant"
+    manifests:
+      - path: playbooks/health/loki-status.yml
+      - path: playbooks/health/operator-status.yml
+
+policySets:
+  - description: HUB Cluster
+    name: openshift-hub
+    placement:
+      placementPath: input/hub-placement.yaml
+
+  - description: Cluster HML
+    name: openshift-clusters
+    placement:
+      placementPath: input/clusters-placement.yaml
+
+  - description: Cluster Producao
+    name: openshift-prd
+    placement:
+      placementPath: input/prd-placement.yaml
