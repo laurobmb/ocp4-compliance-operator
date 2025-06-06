@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: compliance-configuration
+  namespace: openshift-gitops
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/laurobmb/ocp4-compliance-operator'
+    targetRevision: HEAD
+    path: compliance-policys/compliance_yamls/configuration
+  destination:
+    server: 'https://api.malima.rhbr-lab.com:6443'
+    namespace: openshift-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
